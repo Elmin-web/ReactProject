@@ -1,36 +1,32 @@
-import React, { Component } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import "../styles.css";
+import CartItem from "./CartItem";
 
-import CartItem from './CartItem';
+const Cart = () => {
+  const cartGoods = useSelector((store) => store.basketReducer.cartGoods);
 
-class Cart extends Component {
-  state = {
-    cartGoods: []
-  }
-  getTotal() {
-    const { cartGoods } = this.state;
-    return cartGoods.reduce((acc, item) => acc + item.price, 0);
-  }
-  render() {
-    return (
-      <div className="cart">
-        <h2 className="cart__title" >Shopping Cart</h2>
-        { this.state.cartGoods.length ?
-          <ul className="cart__list">
-            {this.state.cartGoods.map((item) => (
-              <li className="cart__list-item" key={item.id}>
-                <CartItem {...item} />
-              </li>
-            ))}
-          </ul>
-        :
-          <p className="cart__note">Nothing in the cart now</p>
-        }
-        
-        <p className="cart__total">Total: {this.getTotal()}.00$</p>
-      </div>
-    );
-  }
-}
+  const getTotal = () => {
+    return cartGoods.reduce((acc, item) => acc + item.price * item.amount, 0);
+  };
+  return (
+    <div className="cart">
+      <h2 className="cart__title">Shopping Cart</h2>
+      {cartGoods.length ? (
+        <ul className="cart__list" key={cartGoods.title}>
+          {cartGoods.map((item, idx) => (
+            <li className="cart__list-item" key={idx}>
+              <CartItem {...item} index={idx} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="cart__note">Nothing in the cart now</p>
+      )}
+
+      <p className="cart__total">Total: {getTotal()}.00$</p>
+    </div>
+  );
+};
 
 export default Cart;
