@@ -4,7 +4,6 @@ import "./styles.css";
 import Header from "./components/Header";
 import Goods from "./components/Goods";
 import Cart from "./components/Cart";
-
 const App = () => {
   return (
     <div className="app">

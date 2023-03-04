@@ -28,13 +28,15 @@ const initialState = {
 const basketReducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD_GOOD":
+      console.log(state.cartGoods);
+
       const isHave = state.cartGoods.find(
         (cartGood) => cartGood.id === action.payload.id
       );
       if (!isHave) {
         return {
           ...state,
-          cartGoods: [...state.cartGoods, { ...action.payload, amount: 1 }],
+          cartGoods: [{ ...action.payload, amount: 1 }, ...state.cartGoods],
         };
       } else {
         const filteredGood = state.cartGoods.filter(
@@ -44,11 +46,20 @@ const basketReducer = (state = initialState, action) => {
         return {
           ...state,
           cartGoods: [
-            ...state.cartGoods.filter((item) => item.id !== action.payload.id),
             ...filteredGood,
+            ...state.cartGoods.filter((item) => item.id !== action.payload.id),
           ],
         };
       }
+    case "ADD_ONE_GOOD":
+      const findItem = state.cartGoods.find(
+        (item) => item.id === action.payload.id
+      );
+      findItem.amount += 1;
+      return {
+        ...state,
+        cartGoods: [...state.cartGoods],
+      };
     case "REMOVE-ITEM":
       const getItem = state.cartGoods.filter(
         (item, index) => index === action.payload.index
@@ -70,6 +81,15 @@ const basketReducer = (state = initialState, action) => {
           cartGoods: [...state.cartGoods],
         };
       }
+    case "REMOVE-ALL-ITEM":
+      const getItem2 = state.cartGoods.find(
+        (item, index) => item.id === action.payload
+      );
+      getItem2.amount = 0;
+      return {
+        ...state,
+        cartGoods: state.cartGoods.filter((item) => item.id !== getItem2.id),
+      };
     default:
       return state;
   }
